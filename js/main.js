@@ -68,6 +68,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     top: targetPosition,
                     behavior: 'smooth'
                 });
+                
+                // Close mobile menu if open
+                if (nav && nav.classList.contains('active')) {
+                    nav.classList.remove('active');
+                    const spans = mobileMenuToggle.querySelectorAll('span');
+                    spans.forEach(span => span.style.transform = 'none');
+                }
             }
         });
     });
