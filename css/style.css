@@ -249,7 +249,7 @@ p {
 
 /* Hero Section - Italian Elegance */
 .hero {
-  padding: calc(var(--header-height) + var(--spacing-3xl)) 0 var(--spacing-3xl);
+  padding: calc(var(--header-height) - 20px) 0 var(--spacing-3xl);
   min-height: 90vh;
   display: flex;
   align-items: center;
@@ -275,15 +275,13 @@ p {
 }
 
 .hero-image {
-  background-color: var(--surface);
   height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  color: var(--text-light);
-  font-style: italic;
-  font-size: 1.1rem;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(28, 35, 49, 0.1);
 }
 
 /* Buttons - Italian Professional Style */
