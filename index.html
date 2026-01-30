@@ -12,7 +12,7 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=11&t=1769595000">
     
     <!-- Preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,13 +23,17 @@
     <header class="header">
         <div class="container">
             <div class="header-container">
-                <a href="#home" class="logo">Wise Bridge Global Partners</a>
+                <a href="index.html" class="logo">
+                    <img src="images/logo.jpeg" alt="Wise Bridge Global Partners" style="height: 45px; width: auto; object-fit: contain;">
+                </a>
                 
                 <nav class="nav" id="nav">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="#about" class="nav-link">About Us</a>
-                    <a href="#services" class="nav-link">Services</a>
-                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="about.html" class="nav-link">About Us</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="careers.html" class="nav-link">Careers</a>
+                    <a href="newsletters.html" class="nav-link">Newsletters</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
                 </nav>
                 
                 <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle mobile menu">
@@ -46,47 +50,98 @@
         <!-- Hero Section -->
         <section id="home" class="hero">
             <div class="container">
-                <div class="hero-content">
+                <!-- Trust Badges -->
+                <div class="hero-badges" style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>Licensed Financial Advisors</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>20+ Years Excellence</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
+                        </svg>
+                        <span>Global Network</span>
+                    </div>
+                </div>
+                
+                <div class="hero-content" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center; min-height: 500px;">
                     <div class="hero-text">
-                        <h1>
-                            Excellence in <span class="accent-line">Financial</span><br>
-                            Advisory Services
+                        <h1 style="font-size: 3.8rem; line-height: 1.1; margin-bottom: 1.5rem;">
+                            Your Offshore <br>
+                            <span style="background: linear-gradient(135deg, #1F4FD8 0%, #3366CC 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Global Execution</span><br>
+                            Partner
                         </h1>
-                        <p class="lead-text">
-                            Wise Bridge Global Partners delivers sophisticated financial consulting with Italian precision. 
-                            We provide strategic guidance that bridges innovation with time-tested expertise.
+                        <p class="lead-text" style="font-size: 1.25rem; line-height: 1.6; margin-bottom: 2rem; max-width: 500px;">
+                            Partner with Wise Bridge Global Partners for sophisticated financial solutions that deliver measurable results. 
+                            Italian precision meets global expertise.
                         </p>
-                        <div class="btn-group">
-                            <a href="#services" class="btn btn-primary">Our Services</a>
-                            <a href="#contact" class="btn btn-secondary">Schedule Consultation</a>
+                        
+                        <!-- Quick Stats -->
+                        <div style="display: flex; gap: 3rem; margin-bottom: 2.5rem;">
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">€2.5B+</div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Assets Managed</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">500+</div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Global Clients</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">98%</div>
+                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Client Retention</div>
+                            </div>
+                        </div>
+                        
+                        <div class="btn-group" style="display: flex; gap: 1rem; align-items: center;">
+                            <a href="contact.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1rem;">
+                                Get Started Today
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="display: inline-block; margin-left: 0.5rem; vertical-align: middle;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                                </svg>
+                            </a>
+                            <a href="services.html" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1rem;">
+                                Explore Services
+                            </a>
+                        </div>
+                        
+                        <!-- Client Logos or Trust Line -->
+                        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(28, 35, 49, 0.08);">
+                            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 0; letter-spacing: 0.05em; text-transform: uppercase;">
+                                Trusted by Fortune 500 Companies & High Net Worth Individuals
+                            </p>
                         </div>
                     </div>
-                    <div class="hero-image" style="background: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; position: relative;">
-                        <!-- Overlay for better text contrast if needed -->
-                        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(28, 35, 49, 0.03) 0%, rgba(31, 79, 216, 0.02) 100%);"></div>
+                    
+                    <div class="hero-visual" style="position: relative;">
+                        <!-- Main Image with Professional Overlay -->
+                        <div class="hero-image" style="height: 500px; border-radius: 8px; overflow: hidden; position: relative; box-shadow: 0 20px 60px rgba(28, 35, 49, 0.15);">
+                            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                                 alt="Financial Advisory Team Meeting" 
+                                 style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- What We Do Section -->
+        <!-- Services Overview Section -->
         <section class="section">
             <div class="container">
-                <div class="text-center">
-                    <h2>What We Do</h2>
+                <div class="text-center mb-5">
+                    <h2>Comprehensive Financial Solutions</h2>
                     <div class="gold-line"></div>
                     <p class="lead-text">
-                        We provide comprehensive financial advisory services designed to meet the complex needs 
-                        of modern businesses and individual clients.
+                        From wealth management to corporate finance, we provide integrated financial services 
+                        designed to meet your most important objectives.
                     </p>
-                </div>
-                
-                <!-- Services Overview Image -->
-                <div style="width: 100%; height: 300px; margin: 3rem 0; border-radius: 2px; overflow: hidden; box-shadow: 0 8px 24px rgba(28, 35, 49, 0.08);">
-                    <div style="width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1450101499163-c8848c66ca85?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; position: relative;">
-                        <!-- Subtle overlay for brand consistency -->
-                        <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(28, 35, 49, 0.02) 0%, rgba(107, 114, 128, 0.01) 100%);"></div>
-                    </div>
                 </div>
                 
                 <div class="grid grid-3">
@@ -95,13 +150,13 @@
                         <div style="position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80') center/cover; filter: blur(8px) brightness(1.1); transform: scale(1.1);"></div>
                         <div style="position: absolute; inset: 0; background: rgba(255, 255, 255, 0.75);"></div>
                         <div style="position: relative; z-index: 1;">
-                            <!-- Audit Icon -->
+                            <!-- Wealth Icon -->
                             <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <h3>Audit & Assurance</h3>
-                            <p>Rigorous financial audit services ensuring accuracy, compliance, and reliability. 
-                               We provide comprehensive assurance that builds stakeholder confidence.</p>
+                            <h3>Wealth Management</h3>
+                            <p>Sophisticated strategies for high-net-worth individuals seeking to preserve and grow wealth across generations.</p>
+                            <a href="services.html" class="btn btn-outline" style="margin-top: 1rem;">Learn More</a>
                         </div>
                     </div>
                     
@@ -115,8 +170,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                             </svg>
                             <h3>Investment Advisory</h3>
-                            <p>Professional investment guidance based on rigorous market analysis and risk assessment. 
-                               Our advisory services help optimize portfolio performance across diverse asset classes.</p>
+                            <p>Professional investment guidance based on rigorous market analysis and risk assessment across global markets.</p>
+                            <a href="services.html" class="btn btn-outline" style="margin-top: 1rem;">Learn More</a>
                         </div>
                     </div>
                     
@@ -130,87 +185,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
                             <h3>Corporate Finance</h3>
-                            <p>Sophisticated corporate finance solutions including capital raising, mergers & acquisitions, 
-                               and strategic financial restructuring for growing enterprises.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Us Section -->
-        <section id="about" class="section section-surface">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2>About Wise Bridge Global Partners</h2>
-                    <div class="gold-line"></div>
-                    <p class="lead-text">
-                        Bridging traditional financial wisdom with innovative strategies 
-                        to serve our clients' most important objectives.
-                    </p>
-                </div>
-                
-                <!-- Team Image - Natural & Authentic -->
-                <div style="width: 100%; height: 400px; margin: 3rem 0; border-radius: 2px; overflow: hidden; box-shadow: 0 12px 32px rgba(28, 35, 49, 0.08);">
-                    <div style="width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; position: relative;">
-                        <!-- Very subtle overlay to maintain brand consistency -->
-                        <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(28, 35, 49, 0.02) 0%, rgba(31, 79, 216, 0.01) 100%);"></div>
-                    </div>
-                </div>
-                
-                <!-- Company Story -->
-                <div class="container-narrow">
-                    <div class="content-section text-center">
-                        <h3>Our Story</h3>
-                        <p>
-                            Founded in 2002, Wise Bridge Global Partners emerged from a vision to create a financial advisory firm 
-                            that combines the sophistication of international finance with the personal attention that defines 
-                            exceptional client relationships. Our founders, drawing from decades of experience in global markets, 
-                            recognized the need for a more thoughtful approach to wealth management and corporate advisory services.
-                        </p>
-                        
-                        <p>
-                            Today, we serve a distinguished clientele across multiple continents, managing over $2.5 billion in assets 
-                            while maintaining our commitment to personalized service and fiduciary responsibility. Our Italian-inspired 
-                            approach emphasizes elegance in strategy, precision in execution, and unwavering integrity in all client relationships.
-                        </p>
-                    </div>
-                </div>
-                
-                <!-- Core Values -->
-                <div class="mt-5">
-                    <h3 class="text-center mb-4">Our Core Values</h3>
-                    <div class="grid grid-2">
-                        <div class="card card-border">
-                            <h4>Fiduciary Responsibility</h4>
-                            <p>
-                                We place our clients' interests above all else, maintaining the highest standards of 
-                                fiduciary duty in every recommendation and decision.
-                            </p>
-                        </div>
-                        
-                        <div class="card card-border">
-                            <h4>Transparent Communication</h4>
-                            <p>
-                                Clear, honest communication forms the foundation of trust. We provide regular, 
-                                comprehensive reporting and maintain open dialogue about strategy and performance.
-                            </p>
-                        </div>
-                        
-                        <div class="card card-border">
-                            <h4>Continuous Innovation</h4>
-                            <p>
-                                While rooted in time-tested principles, we continuously evolve our methodologies 
-                                to incorporate new insights and market opportunities.
-                            </p>
-                        </div>
-                        
-                        <div class="card card-border">
-                            <h4>Cultural Excellence</h4>
-                            <p>
-                                Our commitment to excellence extends beyond financial performance to encompass 
-                                professional development, ethical conduct, and community contribution.
-                            </p>
+                            <p>Strategic M&A advisory, capital raising, and financial restructuring for growing enterprises worldwide.</p>
+                            <a href="services.html" class="btn btn-outline" style="margin-top: 1rem;">Learn More</a>
                         </div>
                     </div>
                 </div>
@@ -218,434 +194,196 @@
         </section>
 
         <!-- Why Choose Us Section -->
-        <section class="section">
+        <section class="section section-surface">
             <div class="container">
-                <div class="text-center">
-                    <h2>Why Choose Wise Bridge</h2>
+                <div class="text-center mb-5">
+                    <h2>Why Leading Organizations Choose Wise Bridge</h2>
                     <div class="gold-line"></div>
                     <p class="lead-text">
-                        Our commitment to excellence and client-focused approach sets us apart 
-                        in the financial advisory landscape.
+                        Our commitment to excellence, integrity, and results has earned the trust of Fortune 500 companies 
+                        and discerning high-net-worth individuals worldwide.
                     </p>
-                </div>
-                
-                <!-- Why Choose Us Image -->
-                <div style="margin: 3rem 0; height: 350px; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 15px rgba(28, 35, 49, 0.1);">
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                         alt="Professional Advisory Team Meeting" 
-                         style="width: 100%; height: 100%; object-fit: cover;">
                 </div>
                 
                 <div class="grid grid-4">
-                    <div class="card text-center">
-                        <!-- Expertise Icon -->
-                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        <h3>Deep Expertise</h3>
-                        <p>Decades of combined experience in international finance, investment management, and corporate advisory services.</p>
-                    </div>
-                    
-                    <div class="card text-center">
-                        <!-- Tailored Solutions Icon -->
-                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <h3>Tailored Solutions</h3>
-                        <p>Custom financial strategies designed specifically for your unique circumstances, goals, and risk tolerance.</p>
-                    </div>
-                    
-                    <div class="card text-center">
-                        <!-- Global Reach Icon -->
-                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <h3>Global Reach</h3>
-                        <p>International network and cross-border expertise to serve clients with global financial interests and opportunities.</p>
-                    </div>
-                    
-                    <div class="card text-center">
-                        <!-- Trust & Integrity Icon -->
-                        <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        <h3>Trust & Integrity</h3>
-                        <p>Unwavering commitment to ethical practices, transparent communication, and fiduciary responsibility to our clients.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Detailed Services Section -->
-        <section id="services" class="section section-surface">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <h2>Our Comprehensive Services</h2>
-                    <div class="gold-line"></div>
-                    <p class="lead-text">
-                        Complete financial advisory solutions delivered with Italian precision and global expertise.
-                    </p>
-                </div>
-                
-                <!-- Wealth Management -->
-                <div class="mb-5">
-                    <div class="grid" style="grid-template-columns: 1fr 2fr; gap: 4rem; align-items: center;">
-                        <div>
-                            <h3>Wealth Management</h3>
-                            <div class="gold-line gold-line-left"></div>
-                            <p class="lead-text">
-                                Sophisticated strategies for high-net-worth individuals and families 
-                                seeking to preserve and grow their wealth across generations.
-                            </p>
-                            <!-- Wealth Management Image -->
-                            <div style="margin-top: 2rem; height: 200px; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 15px rgba(28, 35, 49, 0.1);">
-                                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" 
-                                     alt="Wealth Management Advisory" 
-                                     style="width: 100%; height: 100%; object-fit: cover;">
-                            </div>
-                        </div>
-                        
-                        <div class="card card-border">
-                            <h4>Our Approach</h4>
-                            <p>
-                                We begin with a comprehensive analysis of your financial situation, goals, and risk tolerance. 
-                                Our wealth management process integrates investment strategy, tax planning, and estate considerations.
-                            </p>
-                            
-                            <h5 style="margin-top: 1.5rem; margin-bottom: 1rem;">Key Services Include:</h5>
-                            <ul style="list-style: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Portfolio Construction and Asset Allocation
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Alternative Investment Access
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Tax-Efficient Investment Strategies
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Estate and Succession Planning
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Corporate Finance -->
-                <div class="mb-5">
-                    <h3 class="text-center mb-4">Corporate Finance & Advisory</h3>
-                    <!-- Corporate Finance Overview Image -->
-                    <div style="margin-bottom: 3rem; height: 300px; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 15px rgba(28, 35, 49, 0.1);">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                             alt="Corporate Finance Analytics" 
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="grid grid-2">
-                        <div class="card card-border">
-                            <h4>Mergers & Acquisitions</h4>
-                            <p>
-                                End-to-end M&A advisory services from initial strategic assessment through transaction closure. 
-                                Our team brings deep sector expertise and cross-border transaction experience.
-                            </p>
-                            <ul style="margin-top: 1rem; list-style: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Strategic Buyer and Seller Representation
-                                </li>
-                                <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Valuation Analysis and Fairness Opinions
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div class="card card-border">
-                            <h4>Capital Raising</h4>
-                            <p>
-                                Comprehensive capital markets advisory covering debt and equity financing solutions. 
-                                We help clients access appropriate funding sources while optimizing cost of capital.
-                            </p>
-                            <ul style="margin-top: 1rem; list-style: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Equity Capital Markets Transactions
-                                </li>
-                                <li style="margin-bottom: 0.5rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Debt Financing and Refinancing
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Financial Planning Services -->
-                <div class="mb-5">
-                    <h3 class="text-center mb-4">Financial Planning</h3>
-                    <!-- Financial Planning Overview Image -->
-                    <div style="margin-bottom: 3rem; height: 250px; border-radius: 2px; overflow: hidden; box-shadow: 0 4px 15px rgba(28, 35, 49, 0.1);">
-                        <img src="https://images.unsplash.com/photo-1553729459-efe14ef6055d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
-                             alt="Financial Planning Services" 
-                             style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="grid grid-3">
-                        <div class="card text-center">
-                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <h4>Retirement Planning</h4>
-                            <p>
-                                Customized retirement strategies that consider your lifestyle goals, income needs, 
-                                and risk tolerance to ensure financial security throughout retirement years.
-                            </p>
-                        </div>
-                        
-                        <div class="card text-center">
-                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                            </svg>
-                            <h4>Tax Strategy</h4>
-                            <p>
-                                Sophisticated tax planning strategies that minimize current and future tax liabilities 
-                                while maintaining investment flexibility.
-                            </p>
-                        </div>
-                        
-                        <div class="card text-center">
-                            <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="text-center">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                             </svg>
-                            <h4>Insurance Analysis</h4>
-                            <p>
-                                Comprehensive insurance portfolio review to ensure appropriate coverage levels 
-                                while identifying opportunities to optimize costs.
-                            </p>
                         </div>
+                        <h4>Licensed & Regulated</h4>
+                        <p style="font-size: 0.9rem;">Fully licensed investment advisors operating under strict regulatory oversight in all jurisdictions.</p>
                     </div>
-                </div>
-                
-                <!-- Accounting & Bookkeeping Section -->
-                <div class="mb-5">
-                    <h3 class="text-center mb-4">Accounting & Bookkeeping Excellence</h3>
-                    <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 3rem; align-items: center;">
-                        <div class="card card-border">
-                            <h4>Professional Accounting Services</h4>
-                            <p>
-                                Our accounting and bookkeeping services provide the foundation for sound financial decision-making. 
-                                We maintain meticulous records, ensure compliance with regulations, and deliver clear financial insights 
-                                that drive strategic business decisions.
-                            </p>
-                            <ul style="margin-top: 1.5rem; list-style: none; padding-left: 0;">
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Financial Statement Preparation
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    General Ledger Management
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Accounts Payable & Receivable
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Financial Reporting & Analysis
-                                </li>
-                            </ul>
+                    
+                    <div class="text-center">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
                         </div>
-                        
-                        <!-- Accounting Image -->
-                        <div style="height: 280px; border-radius: 2px; overflow: hidden; box-shadow: 0 8px 24px rgba(28, 35, 49, 0.08);">
-                            <div style="width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1554224154-26032ffc0d07?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2026&q=80') center/cover; position: relative;">
-                                <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(28, 35, 49, 0.03) 0%, rgba(201, 162, 77, 0.02) 100%);"></div>
-                            </div>
+                        <h4>Proven Expertise</h4>
+                        <p style="font-size: 0.9rem;">Two decades of experience managing complex financial portfolios and corporate transactions.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                         </div>
+                        <h4>Global Reach</h4>
+                        <p style="font-size: 0.9rem;">International presence with offices in New York, London, and Milan serving clients worldwide.</p>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </div>
+                        <h4>Client-Centric</h4>
+                        <p style="font-size: 0.9rem;">Personalized service with 98% client retention rate and dedicated relationship managers.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Trust Section -->
+        <!-- Client Testimonials Section -->
         <section class="section">
             <div class="container">
-                <div class="trust-section">
-                    <h2>Built on Trust, Driven by Results</h2>
-                    <div class="gold-line"></div>
-                    <p class="lead-text">
-                        For over two decades, Wise Bridge Global Partners has maintained an unwavering commitment 
-                        to client success through disciplined investment strategies and personalized service excellence.
-                    </p>
-                    
-                    <div class="trust-stats">
-                        <div class="stat-item">
-                            <div class="stat-number">20+</div>
-                            <div class="stat-label">Years of Excellence</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">500+</div>
-                            <div class="stat-label">Satisfied Clients</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-number">$2.5B</div>
-                            <div class="stat-label">Assets Under Management</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Global Presence Image - Minimal & Abstract -->
-                    <div style="width: 100%; height: 280px; margin: 3rem 0; border-radius: 2px; overflow: hidden; position: relative;">
-                        <div style="width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80') center/cover; opacity: 0.4; filter: grayscale(100%) contrast(0.8);"></div>
-                        <!-- Overlay with abstract network dots representing global offices -->
-                        <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(249, 250, 251, 0.95) 0%, rgba(249, 250, 251, 0.85) 50%, rgba(249, 250, 251, 0.95) 100%);"></div>
-                        <svg style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: auto; max-width: 600px;" viewBox="0 0 800 400" fill="none">
-                            <!-- Abstract global network -->
-                            <!-- Connection lines -->
-                            <path d="M200 200 L400 180 L600 200" stroke="#C9A24D" stroke-width="1" opacity="0.3"/>
-                            <path d="M400 180 L450 120 L550 140" stroke="#C9A24D" stroke-width="1" opacity="0.3"/>
-                            <path d="M200 200 L250 260 L400 240" stroke="#C9A24D" stroke-width="1" opacity="0.3"/>
-                            
-                            <!-- Office locations as dots -->
-                            <!-- Americas -->
-                            <circle cx="200" cy="200" r="4" fill="#1C2331"/>
-                            <circle cx="250" cy="260" r="3" fill="#6B7280"/>
-                            <circle cx="180" cy="220" r="3" fill="#6B7280"/>
-                            
-                            <!-- Europe -->
-                            <circle cx="400" cy="180" r="5" fill="#1F4FD8"/>
-                            <circle cx="450" cy="120" r="4" fill="#1C2331"/>
-                            <circle cx="420" cy="200" r="3" fill="#6B7280"/>
-                            
-                            <!-- Asia -->
-                            <circle cx="600" cy="200" r="4" fill="#1C2331"/>
-                            <circle cx="550" cy="140" r="3" fill="#6B7280"/>
-                            <circle cx="620" cy="240" r="3" fill="#6B7280"/>
-                            
-                            <!-- Labels -->
-                            <text x="200" y="185" font-family="Inter, sans-serif" font-size="11" fill="#6B7280">Americas</text>
-                            <text x="385" y="165" font-family="Inter, sans-serif" font-size="11" fill="#6B7280">Europe</text>
-                            <text x="585" y="185" font-family="Inter, sans-serif" font-size="11" fill="#6B7280">Asia Pacific</text>
-                        </svg>
-                    </div>
-                    
-                    <p style="margin-top: 3rem;">
-                        Our global presence spans major financial centers, enabling us to provide sophisticated 
-                        cross-border advisory services while maintaining the personal touch that defines our client relationships.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="section section-surface">
-            <div class="container">
                 <div class="text-center mb-5">
-                    <h2>Contact Us</h2>
+                    <h2>What Our Clients Say</h2>
                     <div class="gold-line"></div>
                     <p class="lead-text">
-                        Begin your journey toward financial excellence. Schedule a confidential consultation 
-                        with our experienced advisory team.
+                        Hear from the business leaders and families who trust us with their most important financial decisions.
                     </p>
                 </div>
                 
-                <div class="grid contact-grid" style="gap: 3rem; align-items: start;">
-                    
-                    <!-- Contact Form -->
-                    <div>
-                        <h3>Schedule a Consultation</h3>
-                        <div class="gold-line gold-line-left"></div>
-                        <p>
-                            We welcome the opportunity to discuss how our services can help you achieve your financial objectives. 
-                            Please complete the form below, and we will contact you within 24 hours.
+                <div class="grid grid-3">
+                    <div class="card" style="padding: 2rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                 alt="Client" 
+                                 style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; object-fit: cover;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 1.1rem;">Michael Rodriguez</h4>
+                                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">CEO, TechVentures Inc.</p>
+                            </div>
+                        </div>
+                        <p style="font-style: italic; color: var(--text-secondary);">
+                            "Wise Bridge's strategic guidance helped us navigate a complex acquisition that doubled our company value. Their expertise in corporate finance is unmatched."
                         </p>
-                        
-                        <form id="contact-form" class="mt-4">
-                            <div class="form-group">
-                                <label for="name" class="form-label">Full Name *</label>
-                                <input type="text" id="name" name="name" class="form-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email" class="form-label">Email Address *</label>
-                                <input type="email" id="email" name="email" class="form-input" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="phone" class="form-label">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" class="form-input">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
-                                    <input type="checkbox" name="privacy-consent" required 
-                                           style="margin-top: 0.25rem; transform: scale(1.2);">
-                                    <span style="font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">
-                                        I acknowledge that I have read and agree to the 
-                                        <a href="#privacy" style="color: var(--accent-color); text-decoration: none;">Privacy Policy</a> 
-                                        and consent to the processing of my personal information for the purpose of this consultation. *
-                                    </span>
-                                </label>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;">
-                                Schedule Consultation
-                            </button>
-                        </form>
                     </div>
                     
-                    <!-- Contact Information -->
-                    <div>
-                        <h3>Get in Touch</h3>
-                        <div class="gold-line gold-line-left"></div>
-                        
-                        <!-- Office Location -->
-                        <div class="mb-4">
-                            <h4>Office Location</h4>
-                            <div class="card card-border mb-3">
-                                <h5 style="color: var(--accent-color);">India Office</h5>
-                                <p class="mb-2">
-                                    <strong>Wise Bridge Global Partners</strong><br>
-                                    Workworm, Metro Station Pillar No. 539, 13B<br>
-                                    Near NHPC Chowk, Block A, DLF Industrial Area<br>
-                                    Sector 32, Faridabad, Haryana 121003
-                                </p>
-                                <p class="mb-2">
-                                    <strong>📧 Email:</strong> <a href="mailto:connect@wisebgp.com" style="color: var(--accent-color);">connect@wisebgp.com</a><br>
-                                    <strong>🔗 LinkedIn:</strong> <a href="https://www.linkedin.com/company/wisebgp" target="_blank" style="color: var(--accent-color);">www.linkedin.com/company/wisebgp</a>
-                                </p>
-                                <p class="small-text">
-                                    Office Hours: Monday - Friday, 9:00 AM - 6:00 PM IST
-                                </p>
+                    <div class="card" style="padding: 2rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                 alt="Client" 
+                                 style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; object-fit: cover;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 1.1rem;">Sarah Chen</h4>
+                                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Private Client</p>
                             </div>
                         </div>
-                        
-                        <!-- Meeting Options -->
-                        <div class="card card-border" style="background-color: var(--surface);">
-                            <h4>Flexible Meeting Options</h4>
-                            <ul style="list-style: none; padding-left: 0; margin-bottom: 0;">
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    In-person meetings at our offices
-                                </li>
-                                <li style="margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Secure video consultations
-                                </li>
-                                <li style="margin-bottom: 0; position: relative; padding-left: 1.5rem;">
-                                    <span style="position: absolute; left: 0; color: var(--gold-accent);">•</span>
-                                    Phone consultations for ongoing communication
-                                </li>
-                            </ul>
+                        <p style="font-style: italic; color: var(--text-secondary);">
+                            "The personalized wealth management approach has exceeded our expectations. Our portfolio has consistently outperformed benchmarks while managing risk effectively."
+                        </p>
+                    </div>
+                    
+                    <div class="card" style="padding: 2rem;">
+                        <div style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" 
+                                 alt="Client" 
+                                 style="width: 60px; height: 60px; border-radius: 50%; margin-right: 1rem; object-fit: cover;">
+                            <div>
+                                <h4 style="margin: 0; font-size: 1.1rem;">David Thompson</h4>
+                                <p style="margin: 0; color: var(--text-secondary); font-size: 0.9rem;">Family Office Director</p>
+                            </div>
                         </div>
+                        <p style="font-style: italic; color: var(--text-secondary);">
+                            "Their multi-generational wealth planning expertise has been invaluable in structuring our family's financial legacy for the next century."
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- Latest Insights Section -->
+        <section class="section section-surface">
+            <div class="container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+                    <div>
+                        <h2 style="margin-bottom: 0.5rem;">Latest Financial Insights</h2>
+                        <div class="gold-line gold-line-left"></div>
+                        <p class="lead-text">
+                            Stay informed with our expert analysis and market commentary.
+                        </p>
+                    </div>
+                    <a href="newsletters.html" class="btn btn-outline">View All Insights</a>
+                </div>
+                
+                <div class="grid grid-3">
+                    <article class="card">
+                        <div style="height: 200px; background: url('https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
+                        <span style="color: var(--gold-accent); font-size: 0.875rem; font-weight: 600;">MARKET OUTLOOK</span>
+                        <h3 style="margin: 0.75rem 0 0.5rem;">Q1 2024 Investment Strategy</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">January 15, 2024</p>
+                        <p style="font-size: 0.9rem;">Key opportunities and risks for the coming quarter, with strategic recommendations for portfolio positioning.</p>
+                        <a href="newsletters.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Read Article →</a>
+                    </article>
+
+                    <article class="card">
+                        <div style="height: 200px; background: url('https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
+                        <span style="color: var(--gold-accent); font-size: 0.875rem; font-weight: 600;">WEALTH PLANNING</span>
+                        <h3 style="margin: 0.75rem 0 0.5rem;">Tax-Efficient Estate Strategies</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">January 10, 2024</p>
+                        <p style="font-size: 0.9rem;">Advanced planning techniques to minimize estate taxes while preserving wealth for future generations.</p>
+                        <a href="newsletters.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Read Article →</a>
+                    </article>
+
+                    <article class="card">
+                        <div style="height: 200px; background: url('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') center/cover; border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
+                        <span style="color: var(--gold-accent); font-size: 0.875rem; font-weight: 600;">CORPORATE FINANCE</span>
+                        <h3 style="margin: 0.75rem 0 0.5rem;">M&A Market Trends 2024</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">January 5, 2024</p>
+                        <p style="font-size: 0.9rem;">Analysis of merger and acquisition activity with insights for strategic corporate planning.</p>
+                        <a href="newsletters.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Read Article →</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section class="section">
+            <div class="container">
+                <div class="card" style="background: linear-gradient(135deg, #1C2331 0%, #1F4FD8 100%); color: white; text-align: center; padding: 4rem 3rem;">
+                    <h2 style="color: white; margin-bottom: 1rem; font-size: 2.5rem;">Ready to Begin Your Financial Journey?</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 2.5rem; opacity: 0.9; max-width: 600px; margin-left: auto; margin-right: auto;">
+                        Schedule a confidential consultation with our experienced advisory team. 
+                        Discover how Italian precision meets global expertise.
+                    </p>
+                    <div style="display: flex; gap: 1.5rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+                        <a href="contact.html" class="btn" 
+                           style="background: var(--gold-accent); color: var(--text-primary); padding: 1.25rem 2.5rem; font-size: 1.1rem; font-weight: 600; border: none;">
+                            Schedule Consultation
+                        </a>
+                        <a href="about.html" class="btn" 
+                           style="background: transparent; color: white; border: 2px solid white; padding: 1.25rem 2.5rem; font-size: 1.1rem;">
+                            Learn About Our Team
+                        </a>
+                    </div>
+                    
+                    <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                        <div style="display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; font-size: 0.9rem; opacity: 0.8;">
+                            <div>📍 New York • London • Milan</div>
+                            <div>📧 info@wisebridgeglobal.com</div>
+                            <div>📞 +1 (212) 555-0180</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -667,22 +405,22 @@
                 <div class="footer-section">
                     <h4>Services</h4>
                     <ul class="footer-links">
-                        <li><a href="#services">Wealth Management</a></li>
-                        <li><a href="#services">Investment Advisory</a></li>
-                        <li><a href="#services">Corporate Finance</a></li>
-                        <li><a href="#services">Financial Planning</a></li>
-                        <li><a href="#services">Risk Management</a></li>
+                        <li><a href="services.html">Wealth Management</a></li>
+                        <li><a href="services.html">Investment Advisory</a></li>
+                        <li><a href="services.html">Corporate Finance</a></li>
+                        <li><a href="services.html">Financial Planning</a></li>
+                        <li><a href="services.html">Risk Management</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Company</h4>
                     <ul class="footer-links">
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#about">Our Team</a></li>
-                        <li><a href="#about">Our Values</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#contact">Careers</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="about.html">Our Team</a></li>
+                        <li><a href="about.html">Our Values</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="careers.html">Careers</a></li>
                     </ul>
                 </div>
                 
