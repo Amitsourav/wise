@@ -310,11 +310,12 @@ function updateNewslettersPage(newsletters) {
 async function main() {
   console.log("Fetching newsletters from Notion...");
 
-  // Ensure newsletters directory exists
+  // Clear and recreate newsletters directory (removes deleted posts)
   const newslettersDir = path.join(__dirname, "..", "newsletters");
-  if (!fs.existsSync(newslettersDir)) {
-    fs.mkdirSync(newslettersDir, { recursive: true });
+  if (fs.existsSync(newslettersDir)) {
+    fs.rmSync(newslettersDir, { recursive: true });
   }
+  fs.mkdirSync(newslettersDir, { recursive: true });
 
   // Fetch and generate newsletters
   const pages = await fetchBlogs();
