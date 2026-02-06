@@ -9,7 +9,7 @@
     
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <link rel="apple-touch-icon" href="images/logo.jpeg">
-    <link rel="stylesheet" href="css/style.css?v=9&t=1769593593">
+    <link rel="stylesheet" href="css/style.css?v=15&t=1769600000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
@@ -23,7 +23,14 @@
                 <nav class="nav" id="nav">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About Us</a>
-                    <a href="services.html" class="nav-link">Services</a>
+                    <div class="nav-dropdown">
+                        <a href="services.html" class="nav-link">Services <span class="dropdown-arrow"></span></a>
+                        <div class="dropdown-menu">
+                            <a href="services.html#accounting">Accounting & Bookkeeping</a>
+                            <a href="services.html#audit">Audit & Assurance</a>
+                            <a href="services.html#tax">Tax Services</a>
+                        </div>
+                    </div>
                     <a href="careers.html" class="nav-link">Careers</a>
                     <a href="newsletters.html" class="nav-link">Newsletters</a>
                     <a href="contact.html" class="nav-link active">Contact</a>
@@ -54,7 +61,7 @@
         <!-- Contact Form & Information -->
         <section class="section">
             <div class="container">
-                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;">
+                <div class="grid grid-2" style="gap: 3rem; align-items: start;">
                     
                     <!-- Contact Form -->
                     <div>
@@ -346,6 +353,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=2"></script>
 </body>
 </html>

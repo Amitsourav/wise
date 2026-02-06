@@ -42,6 +42,24 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
         return transforms[index];
     }
+
+    // Mobile Dropdown Toggle
+    const navDropdowns = document.querySelectorAll('.nav-dropdown');
+    navDropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('.nav-link');
+        const arrow = dropdown.querySelector('.dropdown-arrow');
+
+        if (arrow) {
+            // Only the arrow toggles dropdown on mobile
+            arrow.addEventListener('click', function(e) {
+                if (window.innerWidth <= 991) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdown.classList.toggle('open');
+                }
+            });
+        }
+    });
     
     // Set active navigation link based on current page
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -84,43 +102,36 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             // Get form data
             const formData = new FormData(contactForm);
             const data = {};
             formData.forEach((value, key) => {
                 data[key] = value;
             });
-            
-            // Validate required fields
-            const requiredFields = ['name', 'email', 'service-interest', 'message'];
+
+            // Validate required fields (simplified form: name, email, message)
+            const requiredFields = ['name', 'email', 'message'];
             const missingFields = requiredFields.filter(field => !data[field] || data[field].trim() === '');
-            
+
             if (missingFields.length > 0) {
                 showFormMessage('Please fill in all required fields.', 'error');
                 return;
             }
-            
+
             // Email validation
             if (!isValidEmail(data.email)) {
                 showFormMessage('Please enter a valid email address.', 'error');
                 return;
             }
-            
-            // Check privacy consent
-            const privacyConsent = contactForm.querySelector('input[name="privacy-consent"]');
-            if (!privacyConsent || !privacyConsent.checked) {
-                showFormMessage('Please acknowledge our Privacy Policy to continue.', 'error');
-                return;
-            }
-            
+
             // Simulate form submission (in production, this would send to backend)
             showFormMessage('Submitting your request...', 'info');
-            
+
             // Simulate API call delay
             setTimeout(() => {
                 showFormMessage(
-                    'Thank you for your interest. We will contact you within 24 hours to schedule your consultation.',
+                    'Thank you for reaching out! We will get back to you soon.',
                     'success'
                 );
                 contactForm.reset();

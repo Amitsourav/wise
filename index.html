@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="images/logo.jpeg">
     
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="css/style.css?v=11&t=1769595000">
+    <link rel="stylesheet" href="css/style.css?v=15&t=1769600000">
     
     <!-- Preconnect for Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,14 @@
                 <nav class="nav" id="nav">
                     <a href="index.html" class="nav-link active">Home</a>
                     <a href="about.html" class="nav-link">About Us</a>
-                    <a href="services.html" class="nav-link">Services</a>
+                    <div class="nav-dropdown">
+                        <a href="services.html" class="nav-link">Services <span class="dropdown-arrow"></span></a>
+                        <div class="dropdown-menu">
+                            <a href="services.html#accounting">Accounting & Bookkeeping</a>
+                            <a href="services.html#audit">Audit & Assurance</a>
+                            <a href="services.html#tax">Tax Services</a>
+                        </div>
+                    </div>
                     <a href="careers.html" class="nav-link">Careers</a>
                     <a href="newsletters.html" class="nav-link">Newsletters</a>
                     <a href="contact.html" class="nav-link">Contact</a>
@@ -49,7 +56,7 @@
     <!-- Main Content -->
     <main>
         <!-- Hero Section -->
-        <section id="home" class="hero">
+        <section id="home" class="hero" style="padding-bottom: 2rem;">
             <div class="container">
                 <!-- Trust Badges -->
                 <div class="hero-badges" style="display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center; flex-wrap: wrap;">
@@ -57,19 +64,19 @@
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
                         </svg>
-                        <span>Licensed Financial Advisors</span>
+                        <span>US GAAS & PCAOB Experience</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
                         </svg>
-                        <span>20+ Years Excellence</span>
+                        <span>NPO & Complex Industry Audits</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); font-size: 0.875rem;">
                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="color: #22c55e;">
                             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" fill="none"/>
                         </svg>
-                        <span>Global Network</span>
+                        <span>Integrated Global Delivery Teams</span>
                     </div>
                 </div>
                 
@@ -82,23 +89,6 @@
                         <p class="lead-text" style="font-size: 1.25rem; line-height: 1.6; margin-bottom: 2rem; max-width: 500px;">
                             Wise Bridge Global assist accounting firms globally by providing high-quality, cost-effective accounting & financial services.
                         </p>
-                        
-                        <!-- Quick Stats -->
-                        <div style="display: flex; gap: 3rem; margin-bottom: 2.5rem;">
-                            <div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">€2.5B+</div>
-                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Assets Managed</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">500+</div>
-                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Global Clients</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 2rem; font-weight: 700; color: var(--primary-color); margin-bottom: 0.25rem;">98%</div>
-                                <div style="font-size: 0.875rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Client Retention</div>
-                            </div>
-                        </div>
-                        
                         <div class="btn-group" style="display: flex; gap: 1rem; align-items: center;">
                             <a href="contact.html" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1rem;">
                                 Get Started Today
@@ -109,13 +99,6 @@
                             <a href="contact.html" class="btn btn-outline" style="padding: 1rem 2.5rem; font-size: 1rem;">
                                 Quick Connect
                             </a>
-                        </div>
-                        
-                        <!-- Client Logos or Trust Line -->
-                        <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(28, 35, 49, 0.08);">
-                            <p style="font-size: 0.825rem; color: var(--text-secondary); margin-bottom: 0; letter-spacing: 0.05em; text-transform: uppercase;">
-                                Trusted by Fortune 500 Companies & High Net Worth Individuals
-                            </p>
                         </div>
                     </div>
                     
@@ -132,7 +115,7 @@
         </section>
 
         <!-- Services Overview Section -->
-        <section class="section">
+        <section class="section" style="padding-top: 2rem;">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2>What We Offer?</h2>
@@ -451,6 +434,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=2"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@
     
     <link rel="icon" type="image/jpeg" href="images/logo.jpeg">
     <link rel="apple-touch-icon" href="images/logo.jpeg">
-    <link rel="stylesheet" href="css/style.css?v=9&t=1769593593">
+    <link rel="stylesheet" href="css/style.css?v=15&t=1769600000">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
@@ -23,7 +23,14 @@
                 <nav class="nav" id="nav">
                     <a href="index.html" class="nav-link">Home</a>
                     <a href="about.html" class="nav-link">About Us</a>
-                    <a href="services.html" class="nav-link active">Services</a>
+                    <div class="nav-dropdown">
+                        <a href="services.html" class="nav-link active">Services <span class="dropdown-arrow"></span></a>
+                        <div class="dropdown-menu">
+                            <a href="services.html#accounting">Accounting & Bookkeeping</a>
+                            <a href="services.html#audit">Audit & Assurance</a>
+                            <a href="services.html#tax">Tax Services</a>
+                        </div>
+                    </div>
                     <a href="careers.html" class="nav-link">Careers</a>
                     <a href="newsletters.html" class="nav-link">Newsletters</a>
                     <a href="contact.html" class="nav-link">Contact</a>
@@ -58,13 +65,13 @@
         </section>
 
         <!-- Services Overview -->
-        <section class="section">
+        <section class="section" style="padding-bottom: 2rem;">
             <div class="container">
-                <div class="text-center mb-5">
+                <div class="text-center">
                     <h2>Complete Financial Advisory Solutions</h2>
                     <div class="gold-line"></div>
-                    <p class="lead-text">
-                        From individual wealth management to complex corporate transactions, 
+                    <p class="lead-text" style="margin-bottom: 0;">
+                        From individual wealth management to complex corporate transactions,
                         our integrated approach ensures seamless service across all your financial needs.
                     </p>
                 </div>
@@ -72,7 +79,7 @@
         </section>
 
         <!-- What Services We Provide -->
-        <section class="section section-surface">
+        <section class="section section-surface" style="padding-top: 3rem;">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2>What Services We Provide</h2>
@@ -123,7 +130,7 @@
         </section>
 
         <!-- Auditing & Assurance -->
-        <section class="section">
+        <section class="section" id="audit">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2>Auditing & Assurance</h2>
@@ -161,7 +168,7 @@
         </section>
 
         <!-- Tax Services -->
-        <section class="section section-surface">
+        <section class="section section-surface" id="tax">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2>Tax Services</h2>
@@ -246,7 +253,7 @@
         </section>
 
         <!-- Accounting & Book-Keeping -->
-        <section class="section">
+        <section class="section" id="accounting">
             <div class="container">
                 <div class="text-center mb-5">
                     <h2>Accounting & Book-Keeping</h2>
@@ -669,6 +676,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=2"></script>
 </body>
 </html>
