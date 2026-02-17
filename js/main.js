@@ -47,17 +47,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const navDropdowns = document.querySelectorAll('.nav-dropdown');
     navDropdowns.forEach(dropdown => {
         const link = dropdown.querySelector('.nav-link');
-        const arrow = dropdown.querySelector('.dropdown-arrow');
 
-        if (arrow) {
-            // Only the arrow toggles dropdown on mobile
-            arrow.addEventListener('click', function(e) {
+        if (link) {
+            // Prevent default navigation on mobile, toggle dropdown instead
+            link.addEventListener('click', function(e) {
                 if (window.innerWidth <= 991) {
                     e.preventDefault();
-                    e.stopPropagation();
                     dropdown.classList.toggle('open');
                 }
             });
+
+            // Also catch clicks on the arrow specifically
+            const arrow = dropdown.querySelector('.dropdown-arrow');
+            if (arrow) {
+                arrow.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 991) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        dropdown.classList.toggle('open');
+                    }
+                });
+            }
         }
     });
     

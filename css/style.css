@@ -1103,7 +1103,28 @@ p {
     position: relative;
   }
 
+  .nav-dropdown > .nav-link {
+    cursor: pointer;
+    justify-content: center;
+  }
+
+  .dropdown-arrow {
+    padding: 5px;
+    margin-left: 4px;
+    transform: rotate(45deg);
+  }
+
+  .nav-dropdown:hover .dropdown-arrow {
+    transform: rotate(45deg);
+  }
+
+  .nav-dropdown.open .dropdown-arrow {
+    transform: rotate(-135deg);
+    border-color: var(--accent-color);
+  }
+
   .dropdown-menu {
+    display: block;
     position: static;
     transform: none;
     box-shadow: none;
