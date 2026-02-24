@@ -135,18 +135,125 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            // Simulate form submission (in production, this would send to backend)
+            // Disable submit button to prevent double submission
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'SENDING...';
+            }
+
             showFormMessage('Submitting your request...', 'info');
 
-            // Simulate API call delay
-            setTimeout(() => {
+            // Submit to Formspree
+            fetch('https://formspree.io/f/mojnpwap', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    showFormMessage(
+                        'Thank you for reaching out! We will get back to you soon.',
+                        'success'
+                    );
+                    contactForm.reset();
+                } else {
+                    return response.json().then(function(data) {
+                        throw new Error(data.errors ? data.errors.map(function(err) { return err.message; }).join(', ') : 'Submission failed');
+                    });
+                }
+            })
+            .catch(function(error) {
                 showFormMessage(
-                    'Thank you for reaching out! We will get back to you soon.',
-                    'success'
+                    'Something went wrong. Please try again or email us directly at connect@wisebgp.com',
+                    'error'
                 );
-                contactForm.reset();
-            }, 1500);
+            })
+            .finally(function() {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'SEND';
+                }
+            });
         });
+    }
+
+    // Newsletter Form Handler
+    const newsletterForm = document.getElementById('newsletter-form');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const email = emailInput ? emailInput.value.trim() : '';
+
+            if (!email || !isValidEmail(email)) {
+                showNewsletterMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+
+            const submitBtn = newsletterForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Subscribing...';
+            }
+
+            const formData = new FormData(newsletterForm);
+
+            fetch('https://formspree.io/f/mojnpwap', {
+                method: 'POST',
+                headers: { 'Accept': 'application/json' },
+                body: formData
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    showNewsletterMessage('You\'re subscribed! Thank you for joining our newsletter.', 'success');
+                    newsletterForm.reset();
+                } else {
+                    throw new Error('Subscription failed');
+                }
+            })
+            .catch(function(error) {
+                showNewsletterMessage('Something went wrong. Please try again.', 'error');
+            })
+            .finally(function() {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Subscribe';
+                }
+            });
+        });
+    }
+
+    // Newsletter message display
+    function showNewsletterMessage(message, type) {
+        const existing = document.querySelector('.newsletter-message');
+        if (existing) existing.remove();
+
+        const messageEl = document.createElement('p');
+        messageEl.className = 'newsletter-message';
+        messageEl.textContent = message;
+
+        const colors = {
+            success: 'rgba(74, 222, 128, 0.9)',
+            error: 'rgba(248, 113, 113, 0.9)'
+        };
+
+        Object.assign(messageEl.style, {
+            fontSize: '0.9rem',
+            marginTop: '0.75rem',
+            color: colors[type] || 'white',
+            fontWeight: '500'
+        });
+
+        const form = document.getElementById('newsletter-form');
+        if (form) form.insertAdjacentElement('afterend', messageEl);
+
+        if (type === 'success') {
+            setTimeout(function() {
+                if (messageEl.parentNode) messageEl.remove();
+            }, 5000);
+        }
     }
     
     // Email validation helper
