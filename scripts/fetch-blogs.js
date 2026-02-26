@@ -2,12 +2,45 @@ const { Client } = require("@notionhq/client");
 const { NotionToMarkdown } = require("notion-to-md");
 const fs = require("fs");
 const path = require("path");
+const https = require("https");
+const http = require("http");
 
 // Initialize Notion client
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const n2m = new NotionToMarkdown({ notionClient: notion });
 
 const DATABASE_ID = process.env.NOTION_DATABASE_ID;
+
+// Download image from URL and save locally
+function downloadImage(url, filePath) {
+  return new Promise((resolve, reject) => {
+    const protocol = url.startsWith("https") ? https : http;
+    protocol.get(url, (response) => {
+      // Handle redirects
+      if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
+        return downloadImage(response.headers.location, filePath).then(resolve).catch(reject);
+      }
+      if (response.statusCode !== 200) {
+        return reject(new Error(`Failed to download image: ${response.statusCode}`));
+      }
+      const fileStream = fs.createWriteStream(filePath);
+      response.pipe(fileStream);
+      fileStream.on("finish", () => {
+        fileStream.close();
+        resolve(filePath);
+      });
+      fileStream.on("error", reject);
+    }).on("error", reject);
+  });
+}
+
+// Get file extension from URL or content type
+function getImageExtension(url) {
+  const cleanUrl = url.split("?")[0];
+  const ext = path.extname(cleanUrl).toLowerCase();
+  if ([".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext)) return ext;
+  return ".png"; // default
+}
 
 // Convert markdown to HTML
 function markdownToHtml(markdown) {
@@ -39,19 +72,48 @@ function getNewsletterTemplate() {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
         .newsletter-header {
-            padding: 140px 0 60px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            position: relative;
+            padding: 180px 0 80px;
             color: white;
+            min-height: 450px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+        .newsletter-header-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+        .newsletter-header-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .newsletter-header-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26, 26, 46, 0.95) 0%, rgba(26, 26, 46, 0.6) 50%, rgba(22, 33, 62, 0.4) 100%);
+            z-index: 1;
+        }
+        .newsletter-header-no-image {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .newsletter-header .container {
+            position: relative;
+            z-index: 2;
         }
         .newsletter-header h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
             line-height: 1.3;
+            color: #FFFFFF;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
         .newsletter-meta {
             display: flex;
             gap: 20px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.8);
             font-size: 0.95rem;
             flex-wrap: wrap;
         }
@@ -71,14 +133,6 @@ function getNewsletterTemplate() {
             margin-bottom: 1rem;
             color: #1a1a2e;
         }
-        .newsletter-cover {
-            width: 100%;
-            max-height: 450px;
-            object-fit: cover;
-            border-radius: 12px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -90,6 +144,15 @@ function getNewsletterTemplate() {
         }
         .back-link:hover {
             text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .newsletter-header {
+                min-height: 350px;
+                padding: 140px 0 40px;
+            }
+            .newsletter-header h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -116,8 +179,9 @@ function getNewsletterTemplate() {
         </div>
     </header>
 
-    <!-- Newsletter Header -->
-    <section class="newsletter-header">
+    <!-- Newsletter Header with Cover Background -->
+    <section class="newsletter-header {{HEADER_CLASS}}">
+        {{HEADER_BG}}
         <div class="container">
             <a href="../newsletters.html" class="back-link">← Back to Newsletters</a>
             <h1>{{TITLE}}</h1>
@@ -131,7 +195,6 @@ function getNewsletterTemplate() {
     <!-- Newsletter Content -->
     <section class="newsletter-content">
         <div class="container">
-            {{COVER_IMAGE}}
             <p>{{CONTENT}}</p>
         </div>
     </section>
@@ -239,6 +302,25 @@ async function generateNewsletterPage(page) {
     return null;
   }
 
+  // Download cover image locally if it exists
+  let localCoverImage = "";
+  if (coverImage) {
+    const imagesDir = path.join(__dirname, "..", "images", "newsletters");
+    if (!fs.existsSync(imagesDir)) {
+      fs.mkdirSync(imagesDir, { recursive: true });
+    }
+    const ext = getImageExtension(coverImage);
+    const imageFileName = `${slug}${ext}`;
+    const imagePath = path.join(imagesDir, imageFileName);
+    try {
+      await downloadImage(coverImage, imagePath);
+      localCoverImage = `images/newsletters/${imageFileName}`;
+      console.log(`  Downloaded cover: ${localCoverImage}`);
+    } catch (err) {
+      console.log(`  Warning: Could not download cover image for "${title}": ${err.message}`);
+    }
+  }
+
   // Fetch page content
   const mdBlocks = await n2m.pageToMarkdown(page.id);
   const mdString = n2m.toMarkdownString(mdBlocks);
@@ -251,23 +333,29 @@ async function generateNewsletterPage(page) {
   html = html.replace(/\{\{DATE\}\}/g, formatDate(date));
   html = html.replace(/\{\{AUTHOR\}\}/g, author);
   html = html.replace(/\{\{CONTENT\}\}/g, content);
-  html = html.replace(
-    /\{\{COVER_IMAGE\}\}/g,
-    coverImage ? `<img src="${coverImage}" alt="${title}" class="newsletter-cover">` : ""
-  );
+  if (localCoverImage) {
+    html = html.replace(/\{\{HEADER_CLASS\}\}/g, "");
+    html = html.replace(
+      /\{\{HEADER_BG\}\}/g,
+      `<div class="newsletter-header-bg"><img src="../${localCoverImage}" alt="${title}"></div><div class="newsletter-header-overlay"></div>`
+    );
+  } else {
+    html = html.replace(/\{\{HEADER_CLASS\}\}/g, "newsletter-header-no-image");
+    html = html.replace(/\{\{HEADER_BG\}\}/g, "");
+  }
 
   // Write to file
   const filePath = path.join(__dirname, "..", "newsletters", `${slug}.html`);
   fs.writeFileSync(filePath, html);
   console.log(`Generated: newsletters/${slug}.html`);
 
-  return { title, slug, description, date, author, coverImage };
+  return { title, slug, description, date, author, coverImage: localCoverImage };
 }
 
 // Generate newsletter card HTML
 function generateNewsletterCard(newsletter) {
   const coverStyle = newsletter.coverImage
-    ? `background: url('${newsletter.coverImage}') center/cover;`
+    ? `background: url('${newsletter.coverImage}') center/cover no-repeat;`
     : `background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);`;
 
   return `
