@@ -70,8 +70,25 @@ function getNewsletterTemplate() {
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{DESCRIPTION}}">
+    <meta name="description" content="{{SEO_DESCRIPTION}}">
+    <meta name="keywords" content="{{SEO_KEYWORDS}}">
+    <meta name="author" content="{{AUTHOR}}">
+    <link rel="canonical" href="https://wisebgp.com/newsletters/{{SLUG}}.html">
     <title>{{TITLE}} | Wise Bridge Global Partners</title>
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{TITLE}}">
+    <meta property="og:description" content="{{SEO_DESCRIPTION}}">
+    <meta property="og:url" content="https://wisebgp.com/newsletters/{{SLUG}}.html">
+    <meta property="og:site_name" content="Wise Bridge Global Partners">
+    {{OG_IMAGE}}
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{TITLE}}">
+    <meta name="twitter:description" content="{{SEO_DESCRIPTION}}">
+    {{TWITTER_IMAGE}}
 
     <link rel="icon" type="image/jpeg" href="../images/logo.jpeg">
     <link rel="apple-touch-icon" href="../images/logo.jpeg">
@@ -309,6 +326,8 @@ async function generateNewsletterPage(page) {
   const author = getPropertyValue(page, "Author") || "Wise Bridge Team";
   const coverImage = getPropertyValue(page, "Cover image") || getPropertyValue(page, "Cover Image");
   const category = getPropertyValue(page, "Category") || "";
+  const seoDescription = getPropertyValue(page, "SEO Description") || description || title;
+  const seoKeywords = getPropertyValue(page, "SEO Keywords") || "";
 
   if (!slug) {
     console.log(`Skipping page without slug: ${title}`);
@@ -343,9 +362,19 @@ async function generateNewsletterPage(page) {
   let html = getNewsletterTemplate();
   html = html.replace(/\{\{TITLE\}\}/g, title);
   html = html.replace(/\{\{DESCRIPTION\}\}/g, description || title);
+  html = html.replace(/\{\{SEO_DESCRIPTION\}\}/g, seoDescription);
+  html = html.replace(/\{\{SEO_KEYWORDS\}\}/g, seoKeywords);
+  html = html.replace(/\{\{SLUG\}\}/g, slug);
   html = html.replace(/\{\{DATE\}\}/g, formatDate(date));
   html = html.replace(/\{\{AUTHOR\}\}/g, author);
   html = html.replace(/\{\{CONTENT\}\}/g, content);
+  if (localCoverImage) {
+    html = html.replace(/\{\{OG_IMAGE\}\}/g, `<meta property="og:image" content="https://wisebgp.com/${localCoverImage}">`);
+    html = html.replace(/\{\{TWITTER_IMAGE\}\}/g, `<meta name="twitter:image" content="https://wisebgp.com/${localCoverImage}">`);
+  } else {
+    html = html.replace(/\{\{OG_IMAGE\}\}/g, "");
+    html = html.replace(/\{\{TWITTER_IMAGE\}\}/g, "");
+  }
   if (localCoverImage) {
     html = html.replace(/\{\{HEADER_CLASS\}\}/g, "");
     html = html.replace(
