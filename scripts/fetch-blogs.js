@@ -280,6 +280,10 @@ function getPropertyValue(page, propertyName) {
       return property.url || "";
     case "files":
       return property.files[0]?.file?.url || property.files[0]?.external?.url || "";
+    case "select":
+      return property.select?.name || "";
+    case "multi_select":
+      return property.multi_select?.map(s => s.name) || [];
     default:
       return "";
   }
@@ -304,6 +308,7 @@ async function generateNewsletterPage(page) {
   const date = getPropertyValue(page, "Date");
   const author = getPropertyValue(page, "Author") || "Wise Bridge Team";
   const coverImage = getPropertyValue(page, "Cover image") || getPropertyValue(page, "Cover Image");
+  const category = getPropertyValue(page, "Category") || "";
 
   if (!slug) {
     console.log(`Skipping page without slug: ${title}`);
@@ -357,7 +362,7 @@ async function generateNewsletterPage(page) {
   fs.writeFileSync(filePath, html);
   console.log(`Generated: newsletters/${slug}.html`);
 
-  return { title, slug, description, date, author, coverImage: localCoverImage };
+  return { title, slug, description, date, author, coverImage: localCoverImage, category };
 }
 
 // Generate newsletter card HTML
@@ -395,11 +400,52 @@ function updateNewslettersPage(newsletters) {
 
   if (gridRegex.test(html)) {
     html = html.replace(gridRegex, `$1\n${cardsHtml}\n                $3`);
-    fs.writeFileSync(newslettersPath, html);
-    console.log("Updated: newsletters.html");
   } else {
     console.log("Warning: Could not find grid section in newsletters.html");
   }
+
+  // Update Browse by Category section with real counts
+  const categoryCounts = {};
+  newsletters.forEach(n => {
+    if (n.category) {
+      categoryCounts[n.category] = (categoryCounts[n.category] || 0) + 1;
+    }
+  });
+
+  const categoryIcons = [
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>`,
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>`,
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`,
+    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
+  ];
+
+  const categories = Object.keys(categoryCounts);
+  const gridCols = categories.length <= 2 ? "grid-2" : categories.length === 3 ? "grid-3" : "grid-4";
+  const categoryCardsHtml = categories.length > 0
+    ? categories.map((cat, i) => `
+                    <div class="text-center">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            ${categoryIcons[i % categoryIcons.length]}
+                        </div>
+                        <h4>${cat}</h4>
+                        <p style="font-size: 0.9rem;">${categoryCounts[cat]} Article${categoryCounts[cat] > 1 ? 's' : ''}</p>
+                    </div>`).join("\n")
+    : "";
+
+  // Replace the entire Newsletter Categories section
+  const catSectionRegex = /(<!-- Newsletter Categories -->\s*<section class="section">\s*<div class="container">\s*<h2 class="text-center mb-5">Browse by Category<\/h2>\s*<div class="gold-line"><\/div>)\s*(<div class="grid[\s\S]*?<\/div>)\s*(<\/div>\s*<\/section>)/;
+
+  if (categories.length > 0 && catSectionRegex.test(html)) {
+    html = html.replace(catSectionRegex, `$1\n\n                <div class="${gridCols} grid mt-5">\n${categoryCardsHtml}\n                </div>\n            $3`);
+  } else if (categories.length === 0 && catSectionRegex.test(html)) {
+    // Hide the section if no categories
+    html = html.replace(catSectionRegex, "");
+  }
+
+  fs.writeFileSync(newslettersPath, html);
+  console.log("Updated: newsletters.html");
 }
 
 // Generate homepage insight card HTML

@@ -139,11 +139,11 @@ p {
 }
 
 .section {
-  padding: var(--spacing-3xl) 0;
+  padding: 2rem 0;
 }
 
 .section-lg {
-  padding: calc(var(--spacing-3xl) * 1.5) 0;
+  padding: 3rem 0;
 }
 
 .section-surface {
@@ -780,7 +780,7 @@ p {
 /* Page Headers */
 .page-header {
   background-color: var(--surface);
-  padding: calc(var(--header-height) + var(--spacing-2xl)) 0 var(--spacing-2xl);
+  padding: calc(var(--header-height) + 1.5rem) 0 1.5rem;
   text-align: center;
 }
 
@@ -1191,7 +1191,7 @@ p {
   
   /* Sections */
   .section {
-    padding: var(--spacing-2xl) 0;
+    padding: 1.5rem 0;
     width: 100%;
     margin: 0;
   }
@@ -1381,9 +1381,9 @@ p {
   }
   
   .section {
-    padding: var(--spacing-xl) 0;
+    padding: 1.5rem 0;
   }
-  
+
   /* Typography */
   .hero-text h1 {
     font-size: 1.875rem;
