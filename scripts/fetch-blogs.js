@@ -212,7 +212,7 @@ function getNewsletterTemplate() {
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Wise Bridge Global Partners</h4>
+                    <h4 style="text-transform: uppercase;">Wise Bridge Global Partners</h4>
                     <p>Premier financial consulting and advisory services delivered with Italian elegance and precision.</p>
                 </div>
                 <div class="footer-section">
@@ -402,6 +402,46 @@ function updateNewslettersPage(newsletters) {
   }
 }
 
+// Generate homepage insight card HTML
+function generateHomepageCard(newsletter) {
+  const coverStyle = newsletter.coverImage
+    ? `background: url('${newsletter.coverImage}') center/cover no-repeat;`
+    : `background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);`;
+
+  return `
+                    <article class="card">
+                        <div style="height: 200px; ${coverStyle} border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
+                        <span style="color: var(--gold-accent); font-size: 0.875rem; font-weight: 600;">NEWSLETTER</span>
+                        <h3 style="margin: 0.75rem 0 0.5rem;">${newsletter.title}</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">${formatDate(newsletter.date)}</p>
+                        <p style="font-size: 0.9rem;">${newsletter.description || ""}</p>
+                        <a href="newsletters/${newsletter.slug}.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Read Article →</a>
+                    </article>`;
+}
+
+// Update homepage Latest Financial Insights with latest 3 newsletters
+function updateHomePage(newsletters) {
+  const homePath = path.join(__dirname, "..", "index.html");
+  let html = fs.readFileSync(homePath, "utf-8");
+
+  const latest3 = newsletters.slice(0, 3);
+  const cardsHtml = latest3.length > 0
+    ? latest3.map(generateHomepageCard).join("\n")
+    : `<div class="text-center" style="grid-column: 1/-1; padding: 3rem;">
+         <p style="color: var(--text-secondary);">No insights published yet. Check back soon!</p>
+       </div>`;
+
+  const gridRegex = /(<div class="grid grid-3" id="homepage-insights-grid">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>\s*<!-- Contact CTA Section -->)/;
+
+  if (gridRegex.test(html)) {
+    html = html.replace(gridRegex, `$1\n${cardsHtml}\n                $3`);
+    fs.writeFileSync(homePath, html);
+    console.log("Updated: index.html (Latest Insights)");
+  } else {
+    console.log("Warning: Could not find insights grid section in index.html");
+  }
+}
+
 // Main function
 async function main() {
   console.log("Fetching newsletters from Notion...");
@@ -427,6 +467,9 @@ async function main() {
 
   // Update newsletters listing page
   updateNewslettersPage(newsletters);
+
+  // Update homepage with latest 3 newsletters
+  updateHomePage(newsletters);
 
   console.log("Done!");
 }
