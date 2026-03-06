@@ -1,133 +1,4 @@
-const { Client } = require("@notionhq/client");
-const { NotionToMarkdown } = require("notion-to-md");
-const fs = require("fs");
-const path = require("path");
-const https = require("https");
-const http = require("http");
-
-// Initialize Notion client
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
-const n2m = new NotionToMarkdown({ notionClient: notion });
-
-const DATABASE_ID = process.env.NOTION_DATABASE_ID;
-
-// Download image from URL and save locally
-function downloadImage(url, filePath) {
-  return new Promise((resolve, reject) => {
-    const protocol = url.startsWith("https") ? https : http;
-    protocol.get(url, (response) => {
-      // Handle redirects
-      if (response.statusCode >= 300 && response.statusCode < 400 && response.headers.location) {
-        return downloadImage(response.headers.location, filePath).then(resolve).catch(reject);
-      }
-      if (response.statusCode !== 200) {
-        return reject(new Error(`Failed to download image: ${response.statusCode}`));
-      }
-      const fileStream = fs.createWriteStream(filePath);
-      response.pipe(fileStream);
-      fileStream.on("finish", () => {
-        fileStream.close();
-        resolve(filePath);
-      });
-      fileStream.on("error", reject);
-    }).on("error", reject);
-  });
-}
-
-// Get file extension from URL or content type
-function getImageExtension(url) {
-  const cleanUrl = url.split("?")[0];
-  const ext = path.extname(cleanUrl).toLowerCase();
-  if ([".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext)) return ext;
-  return ".png"; // default
-}
-
-// Convert markdown to HTML
-function markdownToHtml(markdown) {
-  // Split into lines for better processing
-  const lines = markdown.split('\n');
-  let html = '';
-  let inList = false;
-
-  for (let i = 0; i < lines.length; i++) {
-    let line = lines[i].trim();
-
-    // Skip empty lines — they create paragraph breaks
-    if (line === '') {
-      if (inList) {
-        html += '</ul>';
-        inList = false;
-      }
-      html += '</p><p>';
-      continue;
-    }
-
-    // Headings
-    if (line.startsWith('### ')) { line = '<h3>' + line.slice(4) + '</h3>'; if (inList) { html += '</ul>'; inList = false; } html += line; continue; }
-    if (line.startsWith('## ')) { line = '<h2>' + line.slice(3) + '</h2>'; if (inList) { html += '</ul>'; inList = false; } html += line; continue; }
-    if (line.startsWith('# ')) { line = '<h1>' + line.slice(2) + '</h1>'; if (inList) { html += '</ul>'; inList = false; } html += line; continue; }
-
-    // List items (- or *)
-    if (/^[-*]\s+/.test(line)) {
-      if (!inList) {
-        html += '<ul>';
-        inList = true;
-      }
-      let content = line.replace(/^[-*]\s+/, '');
-      // Apply inline formatting
-      content = applyInlineFormatting(content);
-      html += '<li>' + content + '</li>';
-      continue;
-    }
-
-    // Regular line — close list if open
-    if (inList) {
-      html += '</ul>';
-      inList = false;
-    }
-
-    // Apply inline formatting
-    line = applyInlineFormatting(line);
-    html += line + ' ';
-  }
-
-  if (inList) html += '</ul>';
-
-  // Wrap in paragraphs and clean up
-  html = '<p>' + html + '</p>';
-  html = html
-    .replace(/<p>\s*<\/p>/g, '')           // remove empty paragraphs
-    .replace(/<p>\s*(<h[1-3]>)/g, '$1')    // unwrap headings from p
-    .replace(/(<\/h[1-3]>)\s*<\/p>/g, '$1') // unwrap headings from p
-    .replace(/<p>\s*(<ul>)/g, '$1')         // unwrap lists from p
-    .replace(/(<\/ul>)\s*<\/p>/g, '$1')     // unwrap lists from p
-    .replace(/<\/p>\s*<p>\s*<\/p>\s*<p>/g, '</p><p>') // collapse multiple breaks
-    .replace(/<p>\s+/g, '<p>')              // trim whitespace after <p>
-    .replace(/\s+<\/p>/g, '</p>');          // trim whitespace before </p>
-
-  return html;
-}
-
-// Apply inline markdown formatting (bold, italic, images, links)
-function applyInlineFormatting(text) {
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-    .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;">')
-    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank">$1</a>');
-}
-
-// Calculate reading time from HTML content
-function calculateReadingTime(htmlContent) {
-  const text = htmlContent.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
-  const wordCount = text.split(' ').filter(w => w.length > 0).length;
-  const minutes = Math.max(1, Math.ceil(wordCount / 238));
-  return minutes;
-}
-
-// Get individual newsletter page template
-function getNewsletterTemplate() {
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -140,37 +11,37 @@ function getNewsletterTemplate() {
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{{SEO_DESCRIPTION}}">
-    <meta name="keywords" content="{{SEO_KEYWORDS}}">
-    <meta name="author" content="{{AUTHOR}}">
-    <link rel="canonical" href="https://wisebgp.com/newsletters/{{SLUG}}.html">
-    <title>{{TITLE}} | Wise Bridge Global Partners</title>
+    <meta name="description" content="Learn how to manage cash flow in construction projects with proven strategies. Improve billing cycles, control costs, and strengthen financial visibility for long-term profitability. ">
+    <meta name="keywords" content="">
+    <meta name="author" content="By Wise Bridge Global">
+    <link rel="canonical" href="https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html">
+    <title>Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability | Wise Bridge Global Partners</title>
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{{TITLE}}">
-    <meta property="og:description" content="{{SEO_DESCRIPTION}}">
-    <meta property="og:url" content="https://wisebgp.com/newsletters/{{SLUG}}.html">
+    <meta property="og:title" content="Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability">
+    <meta property="og:description" content="Learn how to manage cash flow in construction projects with proven strategies. Improve billing cycles, control costs, and strengthen financial visibility for long-term profitability. ">
+    <meta property="og:url" content="https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html">
     <meta property="og:site_name" content="Wise Bridge Global Partners">
-    {{OG_IMAGE}}
+    <meta property="og:image" content="https://wisebgp.com/images/newsletters/Managing-Cash-Flow-in-Construction.png">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{TITLE}}">
-    <meta name="twitter:description" content="{{SEO_DESCRIPTION}}">
-    {{TWITTER_IMAGE}}
+    <meta name="twitter:title" content="Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability">
+    <meta name="twitter:description" content="Learn how to manage cash flow in construction projects with proven strategies. Improve billing cycles, control costs, and strengthen financial visibility for long-term profitability. ">
+    <meta name="twitter:image" content="https://wisebgp.com/images/newsletters/Managing-Cash-Flow-in-Construction.png">
 
     <!-- Article Schema -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Article",
-      "headline": "{{TITLE}}",
-      "description": "{{SEO_DESCRIPTION}}",
-      "author": { "@type": "Organization", "name": "{{AUTHOR}}" },
+      "headline": "Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability",
+      "description": "Learn how to manage cash flow in construction projects with proven strategies. Improve billing cycles, control costs, and strengthen financial visibility for long-term profitability. ",
+      "author": { "@type": "Organization", "name": "By Wise Bridge Global" },
       "publisher": { "@type": "Organization", "name": "Wise Bridge Global Partners", "url": "https://wisebgp.com" },
-      "datePublished": "{{DATE_ISO}}",
-      "url": "https://wisebgp.com/newsletters/{{SLUG}}.html"
+      "datePublished": "2026-03-06",
+      "url": "https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html"
     }
     </script>
 
@@ -667,8 +538,8 @@ function getNewsletterTemplate() {
     </header>
 
     <!-- Newsletter Header with Cover Background -->
-    <section class="newsletter-header {{HEADER_CLASS}}">
-        {{HEADER_BG}}
+    <section class="newsletter-header ">
+        <div class="newsletter-header-bg"><img src="../images/newsletters/Managing-Cash-Flow-in-Construction.png" alt="Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability"></div><div class="newsletter-header-overlay"></div>
         <div class="container">
             <nav class="breadcrumbs">
                 <a href="../index.html">Home</a>
@@ -677,21 +548,21 @@ function getNewsletterTemplate() {
                 <span class="separator">/</span>
                 <span class="current">Article</span>
             </nav>
-            <h1>{{TITLE}}</h1>
+            <h1>Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability</h1>
             <div class="newsletter-meta">
                 <span>
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    {{DATE}}
+                    
                 </span>
                 <span class="meta-dot"></span>
                 <span>
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    {{AUTHOR}}
+                    By Wise Bridge Global
                 </span>
                 <span class="meta-dot"></span>
                 <span>
                     <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                    {{READING_TIME}} min read
+                    4 min read
                 </span>
             </div>
         </div>
@@ -701,15 +572,15 @@ function getNewsletterTemplate() {
     <div class="article-layout">
         <!-- Left Column: Article Content -->
         <main class="newsletter-content" id="article-content">
-            {{CONTENT}}
+            <p><strong>Managing Cash Flow in Construction Projects: Strategies for Sustainable Profitability</strong></p><p>In the construction industry, profitability does not always guarantee liquidity. A company may show strong project margins on paper, yet struggle to pay vendors, subcontractors, or payroll on time. This is why <strong>managing cash flow in construction projects</strong> is one of the most critical aspects of financial success.</p><p>Construction businesses operate in a unique environment where expenses occur upfront, while payments are often delayed due to billing cycles, retainage, and approval processes. Without structured <strong>construction of cash flow management</strong>, even profitable companies can face financial pressure.</p><p>Let’s explore why cash flow management is challenging in construction and how firms can build a stronger, more predictable financial structure.</p><p><img src="../images/newsletters/Managing-Cash-Flow-in-Construction-inline-1.jpeg" alt="Construction-cash-flow.jpeg" style="max-width: 100%; height: auto; border-radius: 8px; margin: 1.5rem 0;"></p><p><strong>Why Cash Flow Is a Major Challenge in Construction</strong></p><p>Unlike many industries, construction projects involve</p><ul><li>High upfront material purchases</li><li>Ongoing labor expenses</li><li>Subcontractor payments</li><li>Equipment costs</li><li>Delayed client payments</li></ul><p>Additionally, most projects rely on the <strong>progress of billing in construction</strong>, where payments are tied to the completion of milestones. This creates timing gaps between cash outflows and inflows.</p><p>If these timing gaps are not managed strategically, companies may experience:</p><ul><li>Vendor payment delays</li><li>Increased borrowing</li><li>Strained supplier relationships</li><li>Slowed project execution</li></ul><p>Strong construction of cash flow management bridges this gap.</p><p><strong>Common Cash Flow Problems in Construction Projects</strong></p><p><strong>1. Delayed Client Payments</strong></p><p>Client approval processes, documentation errors, or incomplete billing submissions often delay payments.</p><p>Even small delays can disrupt payroll cycles and supplier commitments.</p><p><strong>2. Underbilling or Overbilling</strong></p><p>Improper revenue tracking can lead to:</p><ul><li>Underbilling, where earned revenue exceeds billed amounts</li><li>Overbilling, where billings exceed work completed</li></ul><p>Both situations distort financial visibility and impact liquidity planning.</p><p><strong>3. Poor Job Cost Tracking</strong></p><p>Cash flow issues are often rooted in inaccurate cost tracking.</p><p>If project expenses are not recorded in real time:</p><ul><li>Budget overruns go unnoticed</li><li>Profit margins shrink unexpectedly</li><li>Cash reserves decline</li></ul><p>Accurate job costing strengthens overall construction project profitability.</p><p><strong>4. Retainage Withholding</strong></p><p>Retainage is common in construction contracts. A portion of payment is withheld until project completion.</p><p>While retainage protects clients, it places temporary financial strain on contractors.</p><p>Without proper planning, retainage can significantly affect working capital.</p><p><strong>Strategic Approaches to Managing Cash Flow in Construction Projects</strong></p><p>To maintain financial stability, construction firms must move from reactive to proactive cash flow management.</p><p><strong>1. Implement Detailed Cash Flow Forecasting</strong></p><p><strong>Cash flow forecasting in construction</strong> should be done at both company-wide and project-specific levels.</p><p>Forecasting should include:</p><ul><li>Expected billing milestones</li><li>Projected material purchases</li><li>Labor cost projections</li><li>Retainage schedules</li><li>Vendor payment timelines</li></ul><p>Regular forecasting allows leadership to anticipate shortages before they occur.</p><p><strong>2. Strengthen Progress Billing Processes</strong></p><p>Progress billing must be accurate, timely, and fully documented.</p><p>Best practices include:</p><ul><li>Submitting invoices immediately upon milestone completion</li><li>Verifying percentage-of-completion calculations</li><li>Ensuring change orders are included</li><li>Tracking unpaid invoices actively</li></ul><p>Efficient billing directly improves the construction of cash flow management.</p><p><strong>3. Negotiate Favorable Payment Terms</strong></p><p>Construction companies can improve liquidity by:</p><ul><li>Negotiating faster payment terms with clients</li><li>Aligning vendor payment schedules with receivables</li><li>Securing milestone-based advance payments where possible</li></ul><p>Balanced payment structures reduce working capital pressure.</p><p><strong>4. Monitor Work in Progress (WIP) Reports</strong></p><p>WIP reporting plays a critical role in managing cash flow.</p><p>By reviewing WIP reports monthly, companies can identify:</p><ul><li>Underbilling positions</li><li>Cost overruns</li><li>Revenue recognition gaps</li></ul><p>Strong financial visibility supports better liquidity planning.</p><p><strong>5. Control Project Cost Overruns Early</strong></p><p>Every unexpected cost directly impacts cash reserves.</p><p>To protect construction project profitability:</p><ul><li>Review budgets regularly</li><li>Track labor productivity</li><li>Monitor material price fluctuations</li><li>Update cost-to-complete estimates</li></ul><p>Early cost control prevents cash flow disruption later in the project.</p><p><strong>6. Maintain a Working Capital Buffer</strong></p><p>Construction businesses should maintain sufficient working capital to cover:</p><ul><li>At least 2–3 months of fixed operating expenses</li><li>Payroll cycles</li><li>Vendor commitments</li></ul><p>A financial buffer reduces dependence on short-term borrowing.</p><p><strong>The Role of Construction Accounting in Cash Flow Management</strong></p><p>Strong <strong>construction accounting systems</strong> are essential for maintaining liquidity.</p><p>Accurate financial reporting ensures:</p><ul><li>Revenue aligns with project progress</li><li>Expenses are recorded properly</li><li>Billing cycles remain consistent</li><li>Forecasts reflect real data</li></ul><p>As projects grow in size and complexity, many firms strengthen their financial systems by partnering with specialized accounting providers like <strong>Wise Bridge Global</strong>.</p><p>Their construction-focused financial support helps firms with:</p><ul><li>Cash flow forecasting</li><li>Progress billing management</li><li>Job cost tracking</li><li>WIP reporting</li><li>Financial analysis and reporting</li></ul><p>This structured approach improves financial visibility and allows construction leaders to focus on operational excellence.</p><p><strong>Why Managing Cash Flow Determines Long-Term Success</strong></p><p>Construction companies rarely fail due to lack of work. They fail due to poor cash flow control.</p><p>Even profitable projects can create financial stress if:</p><ul><li>Billing is delayed</li><li>Costs exceed projections</li><li>Retainage accumulates</li><li>Forecasting is weak</li></ul><p>Effective construction cash flow management ensures:</p><ul><li>Stable operations</li><li>Strong vendor relationships</li><li>Confident project expansion</li><li>Sustainable growth</li></ul><h1>**Conclusion**</h1><p>Managing cash flow in construction projects requires more than tracking expenses; it requires strategic financial planning, disciplined billing processes, accurate job costing, and consistent forecasting.</p><p>Construction firms that prioritize cash flow management build resilience against market volatility and project uncertainty.</p><p>In construction, profitability may be measured in margins, but stability is measured in cash flow.</p><p>Companies that master both achieve long-term financial strength.</p>
 
             <!-- Inline Share Bar -->
             <div class="share-inline">
                 <span class="share-inline-label">Share this article</span>
-                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wisebgp.com/newsletters/{{SLUG}}.html" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                 </a>
-                <a href="https://wa.me/?text={{TITLE_ENCODED}}%20-%20https://wisebgp.com/newsletters/{{SLUG}}.html" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+                <a href="https://wa.me/?text=Managing%20Cash%20Flow%20in%20Construction%20Projects%3A%20Strategies%20for%20Sustainable%20Profitability%20-%20https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 </a>
                 <button onclick="copyArticleLink(this)" aria-label="Copy link" class="copy-tooltip">
@@ -747,10 +618,10 @@ function getNewsletterTemplate() {
                 <div class="sidebar-share">
                     <h4>Share this article</h4>
                     <div class="sidebar-share-btns">
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wisebgp.com/newsletters/{{SLUG}}.html" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html" target="_blank" rel="noopener" aria-label="Share on LinkedIn">
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                         </a>
-                        <a href="https://wa.me/?text={{TITLE_ENCODED}}%20-%20https://wisebgp.com/newsletters/{{SLUG}}.html" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+                        <a href="https://wa.me/?text=Managing%20Cash%20Flow%20in%20Construction%20Projects%3A%20Strategies%20for%20Sustainable%20Profitability%20-%20https://wisebgp.com/newsletters/Managing-Cash-Flow-in-Construction.html" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         </a>
                         <button onclick="copyArticleLink(this)" aria-label="Copy link" class="copy-tooltip">
@@ -763,7 +634,18 @@ function getNewsletterTemplate() {
     </div>
 
     <!-- Related Articles -->
-    {{RELATED_ARTICLES}}
+        <div class="related-section">
+        <h3>More from Our Insights</h3>
+        <div class="related-grid">
+                <a href="Accounting-Delays-Audit-Delays.html" class="related-card">
+                    <div class="related-card-img" style="background-image: url('../images/newsletters/Accounting-Delays-Audit-Delays.jpg');"></div>
+                    <div class="related-card-body">
+                        <span>NEWSLETTER</span>
+                        <h4>Accounting Delays = Audit Delays: The Hidden Cost to Growing Firms</h4>
+                    </div>
+                </a>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -845,7 +727,7 @@ function getNewsletterTemplate() {
             var emailInput = blogForm.querySelector('input[type="email"]');
             var email = emailInput ? emailInput.value.trim() : '';
             var msgEl = document.getElementById('blog-subscribe-msg');
-            if (!email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 msgEl.innerHTML = '<p class="subscribe-msg" style="color: #dc2626;">Please enter a valid email.</p>';
                 return;
             }
@@ -869,383 +751,4 @@ function getNewsletterTemplate() {
     }
     </script>
 </body>
-</html>`;
-}
-
-// Fetch all published blogs
-async function fetchBlogs() {
-  try {
-    const response = await notion.databases.query({
-      database_id: DATABASE_ID,
-      filter: {
-        property: "Published",
-        checkbox: {
-          equals: true,
-        },
-      },
-      sorts: [
-        {
-          property: "Date",
-          direction: "descending",
-        },
-      ],
-    });
-    return response.results;
-  } catch (error) {
-    console.error("Error fetching blogs:", error);
-    return [];
-  }
-}
-
-// Get property value helper
-function getPropertyValue(page, propertyName) {
-  const property = page.properties[propertyName];
-  if (!property) return "";
-
-  switch (property.type) {
-    case "title":
-      return property.title[0]?.plain_text || "";
-    case "rich_text":
-      return property.rich_text[0]?.plain_text || "";
-    case "date":
-      return property.date?.start || "";
-    case "checkbox":
-      return property.checkbox;
-    case "url":
-      return property.url || "";
-    case "files":
-      return property.files[0]?.file?.url || property.files[0]?.external?.url || "";
-    case "select":
-      return property.select?.name || "";
-    case "multi_select":
-      return property.multi_select?.map(s => s.name) || [];
-    default:
-      return "";
-  }
-}
-
-// Format date
-function formatDate(dateStr) {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
-// Generate individual newsletter page
-async function generateNewsletterPage(page) {
-  const title = getPropertyValue(page, "Title") || getPropertyValue(page, "Name");
-  const slug = getPropertyValue(page, "slug") || getPropertyValue(page, "Slug");
-  const description = getPropertyValue(page, "Description");
-  const date = getPropertyValue(page, "Date");
-  const author = getPropertyValue(page, "Author") || "Wise Bridge Team";
-  const coverImage = getPropertyValue(page, "Cover image") || getPropertyValue(page, "Cover Image");
-  const category = getPropertyValue(page, "Category") || "";
-  const seoDescription = getPropertyValue(page, "SEO Description") || description || title;
-  const seoKeywords = getPropertyValue(page, "SEO Keywords") || "";
-
-  if (!slug) {
-    console.log(`Skipping page without slug: ${title}`);
-    return null;
-  }
-
-  // Download cover image locally if it exists
-  let localCoverImage = "";
-  if (coverImage) {
-    const imagesDir = path.join(__dirname, "..", "images", "newsletters");
-    if (!fs.existsSync(imagesDir)) {
-      fs.mkdirSync(imagesDir, { recursive: true });
-    }
-    const ext = getImageExtension(coverImage);
-    const imageFileName = `${slug}${ext}`;
-    const imagePath = path.join(imagesDir, imageFileName);
-    try {
-      await downloadImage(coverImage, imagePath);
-      localCoverImage = `images/newsletters/${imageFileName}`;
-      console.log(`  Downloaded cover: ${localCoverImage}`);
-    } catch (err) {
-      console.log(`  Warning: Could not download cover image for "${title}": ${err.message}`);
-    }
-  }
-
-  // Fetch page content
-  const mdBlocks = await n2m.pageToMarkdown(page.id);
-  const mdString = n2m.toMarkdownString(mdBlocks);
-  let content = markdownToHtml(mdString.parent || "");
-
-  // Download inline content images locally (Notion S3 URLs expire)
-  const imgRegex = /<img\s+src="(https:\/\/prod-files-secure\.s3[^"]+)"/g;
-  let imgMatch;
-  let imgIndex = 0;
-  const imagesDir = path.join(__dirname, "..", "images", "newsletters");
-  if (!fs.existsSync(imagesDir)) {
-    fs.mkdirSync(imagesDir, { recursive: true });
-  }
-  while ((imgMatch = imgRegex.exec(content)) !== null) {
-    const notionUrl = imgMatch[1];
-    imgIndex++;
-    const ext = getImageExtension(notionUrl);
-    const imgFileName = `${slug}-inline-${imgIndex}${ext}`;
-    const imgPath = path.join(imagesDir, imgFileName);
-    try {
-      await downloadImage(notionUrl, imgPath);
-      const localImgPath = `../images/newsletters/${imgFileName}`;
-      content = content.replace(notionUrl, localImgPath);
-      console.log(`  Downloaded inline image: ${imgFileName}`);
-    } catch (err) {
-      console.log(`  Warning: Could not download inline image ${imgIndex}: ${err.message}`);
-    }
-  }
-
-  // Generate HTML
-  let html = getNewsletterTemplate();
-  html = html.replace(/\{\{TITLE\}\}/g, title);
-  html = html.replace(/\{\{DESCRIPTION\}\}/g, description || title);
-  html = html.replace(/\{\{SEO_DESCRIPTION\}\}/g, seoDescription);
-  html = html.replace(/\{\{SEO_KEYWORDS\}\}/g, seoKeywords);
-  html = html.replace(/\{\{SLUG\}\}/g, slug);
-  html = html.replace(/\{\{DATE\}\}/g, formatDate(date));
-  html = html.replace(/\{\{AUTHOR\}\}/g, author);
-  html = html.replace(/\{\{CONTENT\}\}/g, content);
-
-  // Reading time
-  const readingTime = calculateReadingTime(content);
-  html = html.replace(/\{\{READING_TIME\}\}/g, String(readingTime));
-
-  // Encoded title for share URLs
-  const titleEncoded = encodeURIComponent(title);
-  html = html.replace(/\{\{TITLE_ENCODED\}\}/g, titleEncoded);
-
-  // ISO date for schema markup
-  html = html.replace(/\{\{DATE_ISO\}\}/g, date || new Date().toISOString().split('T')[0]);
-
-  // Related articles — placeholder, filled in second pass after all pages generated
-  html = html.replace(/\{\{RELATED_ARTICLES\}\}/g, '<!-- RELATED_ARTICLES_PLACEHOLDER -->');
-
-  if (localCoverImage) {
-    html = html.replace(/\{\{OG_IMAGE\}\}/g, `<meta property="og:image" content="https://wisebgp.com/${localCoverImage}">`);
-    html = html.replace(/\{\{TWITTER_IMAGE\}\}/g, `<meta name="twitter:image" content="https://wisebgp.com/${localCoverImage}">`);
-  } else {
-    html = html.replace(/\{\{OG_IMAGE\}\}/g, "");
-    html = html.replace(/\{\{TWITTER_IMAGE\}\}/g, "");
-  }
-  if (localCoverImage) {
-    html = html.replace(/\{\{HEADER_CLASS\}\}/g, "");
-    html = html.replace(
-      /\{\{HEADER_BG\}\}/g,
-      `<div class="newsletter-header-bg"><img src="../${localCoverImage}" alt="${title}"></div><div class="newsletter-header-overlay"></div>`
-    );
-  } else {
-    html = html.replace(/\{\{HEADER_CLASS\}\}/g, "newsletter-header-no-image");
-    html = html.replace(/\{\{HEADER_BG\}\}/g, "");
-  }
-
-  // Write to file
-  const filePath = path.join(__dirname, "..", "newsletters", `${slug}.html`);
-  fs.writeFileSync(filePath, html);
-  console.log(`Generated: newsletters/${slug}.html`);
-
-  return { title, slug, description, date, author, coverImage: localCoverImage, category };
-}
-
-// Generate newsletter card HTML
-function generateNewsletterCard(newsletter) {
-  const coverStyle = newsletter.coverImage
-    ? `background: url('${newsletter.coverImage}') center/cover no-repeat;`
-    : `background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);`;
-
-  return `
-                    <article class="card">
-                        <div style="height: 200px; ${coverStyle} border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
-                        <span style="color: var(--gold-accent); font-size: 0.875rem;">NEWSLETTER</span>
-                        <h3 style="margin: 0.5rem 0;">${newsletter.title}</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">${formatDate(newsletter.date)}</p>
-                        <p>${newsletter.description || ""}</p>
-                        <a href="newsletters/${newsletter.slug}.html" class="btn btn-outline" style="margin-top: 1rem; display: inline-block;">Read More →</a>
-                    </article>`;
-}
-
-// Update newsletters.html with dynamic content
-function updateNewslettersPage(newsletters) {
-  const newslettersPath = path.join(__dirname, "..", "newsletters.html");
-  let html = fs.readFileSync(newslettersPath, "utf-8");
-
-  // Generate newsletter cards
-  const cardsHtml = newsletters.length > 0
-    ? newsletters.map(generateNewsletterCard).join("\n")
-    : `<div class="text-center" style="grid-column: 1/-1; padding: 3rem;">
-         <p style="color: var(--text-secondary);">No newsletters published yet. Check back soon!</p>
-       </div>`;
-
-  // Find and replace the grid content
-  // Match from "Latest Publications" grid start to end
-  const gridRegex = /(<div class="grid grid-3 mt-5">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>\s*<!-- Special Reports -->)/;
-
-  if (gridRegex.test(html)) {
-    html = html.replace(gridRegex, `$1\n${cardsHtml}\n                $3`);
-  } else {
-    console.log("Warning: Could not find grid section in newsletters.html");
-  }
-
-  // Update Browse by Category section with real counts
-  const categoryCounts = {};
-  newsletters.forEach(n => {
-    if (n.category) {
-      categoryCounts[n.category] = (categoryCounts[n.category] || 0) + 1;
-    }
-  });
-
-  const categoryIcons = [
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>`,
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>`,
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>`,
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>`,
-    `<svg width="32" height="32" fill="none" stroke="var(--gold-accent)" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>`,
-  ];
-
-  const categories = Object.keys(categoryCounts);
-  const gridCols = categories.length <= 2 ? "grid-2" : categories.length === 3 ? "grid-3" : "grid-4";
-  const categoryCardsHtml = categories.length > 0
-    ? categories.map((cat, i) => `
-                    <div class="text-center">
-                        <div style="width: 80px; height: 80px; margin: 0 auto 1rem; background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); border: 2px solid var(--gold-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            ${categoryIcons[i % categoryIcons.length]}
-                        </div>
-                        <h4>${cat}</h4>
-                        <p style="font-size: 0.9rem;">${categoryCounts[cat]} Article${categoryCounts[cat] > 1 ? 's' : ''}</p>
-                    </div>`).join("\n")
-    : "";
-
-  // Replace the entire Newsletter Categories section
-  const catSectionRegex = /(<!-- Newsletter Categories -->\s*<section class="section">\s*<div class="container">\s*<h2 class="text-center mb-5">Browse by Category<\/h2>\s*<div class="gold-line"><\/div>)\s*(<div class="grid[\s\S]*?<\/div>)\s*(<\/div>\s*<\/section>)/;
-
-  if (categories.length > 0 && catSectionRegex.test(html)) {
-    html = html.replace(catSectionRegex, `$1\n\n                <div class="${gridCols} grid mt-5">\n${categoryCardsHtml}\n                </div>\n            $3`);
-  } else if (categories.length === 0 && catSectionRegex.test(html)) {
-    // Hide the section if no categories
-    html = html.replace(catSectionRegex, "");
-  }
-
-  fs.writeFileSync(newslettersPath, html);
-  console.log("Updated: newsletters.html");
-}
-
-// Generate homepage insight card HTML
-function generateHomepageCard(newsletter) {
-  const coverStyle = newsletter.coverImage
-    ? `background: url('${newsletter.coverImage}') center/cover no-repeat;`
-    : `background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);`;
-
-  return `
-                    <article class="card">
-                        <div style="height: 200px; ${coverStyle} border-radius: 4px 4px 0 0; margin: -1.5rem -1.5rem 1.5rem;"></div>
-                        <span style="color: var(--gold-accent); font-size: 0.875rem; font-weight: 600;">NEWSLETTER</span>
-                        <h3 style="margin: 0.75rem 0 0.5rem;">${newsletter.title}</h3>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">${formatDate(newsletter.date)}</p>
-                        <p style="font-size: 0.9rem;">${newsletter.description || ""}</p>
-                        <a href="newsletters/${newsletter.slug}.html" style="color: var(--accent-color); text-decoration: none; font-weight: 500; font-size: 0.9rem;">Read Article →</a>
-                    </article>`;
-}
-
-// Update homepage Latest Financial Insights with latest 3 newsletters
-function updateHomePage(newsletters) {
-  const homePath = path.join(__dirname, "..", "index.html");
-  let html = fs.readFileSync(homePath, "utf-8");
-
-  const latest3 = newsletters.slice(0, 3);
-  const cardsHtml = latest3.length > 0
-    ? latest3.map(generateHomepageCard).join("\n")
-    : `<div class="text-center" style="grid-column: 1/-1; padding: 3rem;">
-         <p style="color: var(--text-secondary);">No insights published yet. Check back soon!</p>
-       </div>`;
-
-  const gridRegex = /(<div class="grid grid-3" id="homepage-insights-grid">)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>\s*<!-- Contact CTA Section -->)/;
-
-  if (gridRegex.test(html)) {
-    html = html.replace(gridRegex, `$1\n${cardsHtml}\n                $3`);
-    fs.writeFileSync(homePath, html);
-    console.log("Updated: index.html (Latest Insights)");
-  } else {
-    console.log("Warning: Could not find insights grid section in index.html");
-  }
-}
-
-// Generate related articles HTML for a newsletter page
-function generateRelatedArticlesHtml(currentSlug, allNewsletters) {
-  const others = allNewsletters.filter(n => n.slug !== currentSlug).slice(0, 2);
-  if (others.length === 0) return '';
-
-  const cards = others.map(n => {
-    const imgStyle = n.coverImage
-      ? `background-image: url('../${n.coverImage}');`
-      : `background: linear-gradient(135deg, #1C2331 0%, #1F4FD8 100%);`;
-    return `
-                <a href="${n.slug}.html" class="related-card">
-                    <div class="related-card-img" style="${imgStyle}"></div>
-                    <div class="related-card-body">
-                        <span>NEWSLETTER</span>
-                        <h4>${n.title}</h4>
-                    </div>
-                </a>`;
-  }).join('');
-
-  return `    <div class="related-section">
-        <h3>More from Our Insights</h3>
-        <div class="related-grid">${cards}
-        </div>
-    </div>`;
-}
-
-// Second pass: inject related articles into generated pages
-function injectRelatedArticles(newsletters) {
-  for (const newsletter of newsletters) {
-    const filePath = path.join(__dirname, '..', 'newsletters', `${newsletter.slug}.html`);
-    if (!fs.existsSync(filePath)) continue;
-    let html = fs.readFileSync(filePath, 'utf-8');
-    const relatedHtml = generateRelatedArticlesHtml(newsletter.slug, newsletters);
-    html = html.replace('<!-- RELATED_ARTICLES_PLACEHOLDER -->', relatedHtml);
-    fs.writeFileSync(filePath, html);
-  }
-  console.log('Injected related articles into newsletter pages');
-}
-
-// Main function
-async function main() {
-  console.log("Fetching newsletters from Notion...");
-
-  // Clear and recreate newsletters directory (removes deleted posts)
-  const newslettersDir = path.join(__dirname, "..", "newsletters");
-  if (fs.existsSync(newslettersDir)) {
-    fs.rmSync(newslettersDir, { recursive: true });
-  }
-  fs.mkdirSync(newslettersDir, { recursive: true });
-
-  // Fetch and generate newsletters
-  const pages = await fetchBlogs();
-  console.log(`Found ${pages.length} published newsletters`);
-
-  const newsletters = [];
-  for (const page of pages) {
-    const newsletter = await generateNewsletterPage(page);
-    if (newsletter) {
-      newsletters.push(newsletter);
-    }
-  }
-
-  // Inject related articles (second pass, needs all newsletters data)
-  injectRelatedArticles(newsletters);
-
-  // Update newsletters listing page
-  updateNewslettersPage(newsletters);
-
-  // Update homepage with latest 3 newsletters
-  updateHomePage(newsletters);
-
-  console.log("Done!");
-}
-
-main();
+</html>
